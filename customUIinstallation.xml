@@ -1,0 +1,18 @@
+<customUI xmlns="http://schemas.microsoft.com/office/2006/01/customui" onLoad="customRibbonLoad">
+  <ribbon startFromScratch = "false">
+    <tabs>
+      <tab id="customTabInstall" label="ADDIN_INSTALL">
+		  <group id="groupInstallME" label="Installation" tag="installAddIn" getVisible="VisibilityOfAddInInstallation">
+			  <button
+					id="bttnInstallThisAddIn"
+					getLabel="getLabelbttnInstallThisAddIn"
+					size="normal"
+					onAction="installThisAddIn"
+					imageMso="PictureBrightnessGallery"
+					/>
+			</group>
+      </tab>
+    </tabs>
+  </ribbon>
+
+</customUI>
