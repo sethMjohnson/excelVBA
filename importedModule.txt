@@ -1,0 +1,6 @@
+Attribute VB_Name = "importedModule"
+Option Explicit
+
+Function functionInTheImportedModule()
+	Msgbox "HELLO"
+End Function
