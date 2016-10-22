@@ -2,6 +2,7 @@ Attribute VB_Name = "importModule"
 Option Explicit
 'http://www.cpearson.com/excel/vbe.aspx
 'http://www.rondebruin.nl/win/s9/win002.htm
+'https://support.microsoft.com/en-us/kb/219905
 
 Sub imported()
     Dim VBProj As VBIDE.VBProject
