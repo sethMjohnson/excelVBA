@@ -25,11 +25,18 @@ Private Sub Workbook_Open()
     Call AddHiddenName(addinAutoDisabled, False, True)
 
     If InStr(ThisWorkbook.Name, UPGRADE_TEXT) > 0 Then
+On Error GoTo ERR_AddInNotInstalled
         If Excel.Application.AddIns(addInName).Installed = True Then
             Excel.Application.AddIns(addInName).Installed = False
             Call AddHiddenName(addinAutoDisabled, True, True)
         End If
     End If
+Exit Sub
+
+
+ERR_AddInNotInstalled:
+    MsgBox "The tag of " & UPGRADE_TEXT & " was attached to this workbook. This AddIn is not currently installed, so cannot be upgraded. Exiting."
+    ThisWorkbook.Close SaveChanges:=False
 End Sub
 
 
