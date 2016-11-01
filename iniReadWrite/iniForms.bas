@@ -1,4 +1,3 @@
-Attribute VB_Name = "iniForms"
 Option Explicit
 Function FormINI(ByRef formUsing As UserForm, _
                  ByVal strINIpath As String, _
@@ -28,6 +27,10 @@ Function FormINI(ByRef formUsing As UserForm, _
                 Case "ComboBox"
                 
                 Case "CommandButton"
+                
+                Case "Frame"
+                
+                Case "MultiPage"
                     
                 Case Else
                     MsgBox TypeName(ctrl) & " :: Not found in Select."
@@ -37,23 +40,27 @@ Function FormINI(ByRef formUsing As UserForm, _
             Select Case TypeName(ctrl)
                 Case "CheckBox"
                     strINIValue = ManageINI(actionINI, ctrl.Name, "Caption", strINIpath)
-                        If strINIValue <> "DNE" Then ctrl.Caption = strINIValue
+                        If strINIValue <> c_KEY_DOES_NOT_EXIST Then ctrl.Caption = strINIValue
                     strINIValue = ManageINI(actionINI, ctrl.Name, "Value", strINIpath)
-                        If strINIValue <> "DNE" Then ctrl.Value = strINIValue
+                        If strINIValue <> c_KEY_DOES_NOT_EXIST Then ctrl.Value = strINIValue
                     strINIValue = ManageINI(actionINI, ctrl.Name, "Control Tip Text", strINIpath)
-                        If strINIValue <> "DNE" Then ctrl.ControlTipText = strINIValue
+                        If strINIValue <> c_KEY_DOES_NOT_EXIST Then ctrl.ControlTipText = strINIValue
                     
                 Case "Label"
                     strINIValue = ManageINI(actionINI, ctrl.Name, "Caption", strINIpath)
-                        If strINIValue <> "DNE" Then ctrl.Caption = strINIValue
+                        If strINIValue <> c_KEY_DOES_NOT_EXIST Then ctrl.Caption = strINIValue
                     
                 Case "TextBox"
                     strINIValue = ManageINI(actionINI, ctrl.Name, "Value", strINIpath)
-                        If strINIValue <> "DNE" Then ctrl.Value = strINIValue
+                        If strINIValue <> c_KEY_DOES_NOT_EXIST Then ctrl.Value = strINIValue
                     
                 Case "ComboBox"
                 
                 Case "CommandButton"
+                
+                Case "Frame"
+                
+                Case "MultiPage"
                     
                 Case Else
                     MsgBox TypeName(ctrl) & " :: Not found in Select."
@@ -61,5 +68,3 @@ Function FormINI(ByRef formUsing As UserForm, _
         End If
     Next ctrl
 End Function
-
-
