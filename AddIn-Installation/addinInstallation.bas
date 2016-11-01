@@ -107,7 +107,9 @@ On Error GoTo ErrorsHappens
     Set objAddin = Nothing
     Set fso = Nothing
 
-    MsgBox ("Installation Successful. You may need to restart Excel to see changes.")
+    MsgBox ("Installation Successful. You may need to restart Excel to see changes." & vbCrLf & vbCrLf & _
+            "If the AddIn does not show, you may need to enable it in Excel Options: " & vbCrLf & _
+            "   File > Options > Add-Ins > Manage: [Excel Add-Ins] [GO...]")
     
 On Error GoTo 0
     Exit Sub
