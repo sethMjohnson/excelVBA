@@ -1,7 +1,7 @@
 Attribute VB_Name = "iniIO"
 Option Explicit
 
-Const c_KEY_DOES_NOT_EXIST = "DNE: Key Does Not Exist"
+Global Const c_KEY_DOES_NOT_EXIST = "DNE: Key Does Not Exist"
 '*******************************************************************************
 ' Declaration for Reading and Writing to an INI file.
 '*******************************************************************************
