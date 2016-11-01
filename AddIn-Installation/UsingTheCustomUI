@@ -1,0 +1,5 @@
+You'll need to add something to the effect of:
+<Relationship Id="customUIRelID" Type="http://schemas.microsoft.com/office/2006/relationships/ui/extensibility" Target="customUI/customUI.xml"/>
+To the .rels file in the _rels folder in the xml
+
+You'll then need the file that that relationship is pointing to. In this case, "customUI.xml" inside a folder called "customUI" in the root of the document.
