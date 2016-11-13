@@ -27,6 +27,8 @@ Option Explicit
 'https://en.wikipedia.org/wiki/Lab_color_space
 'http://www.easyrgb.com/?X=MATH
 'http://entropymine.com/imageworsener/srgbformula/
+'
+'Validation with: http://colormine.org/color-converter
 
 
 Const DEFAULT_EMPTY_VAL = -1
