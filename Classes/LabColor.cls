@@ -29,6 +29,9 @@ Option Explicit
 'http://entropymine.com/imageworsener/srgbformula/
 '
 'Validation with: http://colormine.org/color-converter
+'
+'ERRORS:
+' There is an off-by-one error with RGB values.
 
 
 Const DEFAULT_EMPTY_VAL = -1
