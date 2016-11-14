@@ -309,13 +309,13 @@ Private Sub setRGBFromXYZ()
     RGB_B = partB * 255
 End Sub
 
-Public Sub setHexFromRGB()
+Private Sub setHexFromRGB()
     
     HEX_Color = "#" & numberToHex(RGB_R) & numberToHex(RGB_G) & numberToHex(RGB_B)
     
 End Sub
 
-Public Function numberToHex(ByVal number As Long) As String
+Private Function numberToHex(ByVal number As Long) As String
     Dim part1 As String
     Dim part2 As String
     
