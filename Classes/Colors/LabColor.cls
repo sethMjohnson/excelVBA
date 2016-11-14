@@ -31,7 +31,6 @@ Option Explicit
 'Validation with: http://colormine.org/color-converter
 '
 'ToDos:
-' Upper and lower limits are broken? When using Hex code of 00FF00, eg
 ' Write in validation of values for everything
 '
 'ERRORS:
@@ -41,6 +40,9 @@ Option Explicit
 '   Helped by: http://www.mrexcel.com/forum/members/stephencrump.html
 '   Forum Link: http://www.mrexcel.com/forum/excel-questions/975682-conversion-hex-rgb-xyz-lab-off-one-error.html
 '   Also inspired to look into the built-in functions so I wouldn't have to use my own for Hex values
+' Upper and lower limits are broken? When using Hex code of 00FF00, eg
+'   00 was the cause, and it was because it only saw as 0, meaning the string wasn't 7 characters long, so only the
+'   default value was remaining.
 
 
 Const DEFAULT_EMPTY_VAL = -1
