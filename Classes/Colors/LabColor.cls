@@ -15,7 +15,7 @@ Option Explicit
 ' 0.04045<S<=1            | L = ((S+0.055)/1.055)^2.4
 '
 'All equations are taken as:
-'   Observer. = 2°, Illuminant = D65
+'   Observer. = 2Â°, Illuminant = D65
 '
 'Lab color is used to approximate human vision.
 '   The closer the values are together, the closer to what it looks like.
@@ -235,7 +235,7 @@ Private Sub setXYZFromRGB()
     partG = partG * 100
     partB = partB * 100
     
-    'Observer. = 2°, Illuminant = D65
+    'Observer. = 2Â°, Illuminant = D65
     Linear_X = (partR * 0.4124) + (partG * 0.3576) + (partB * 0.1805)
     Linear_Y = (partR * 0.2126) + (partG * 0.7152) + (partB * 0.0722)
     Linear_Z = (partR * 0.0193) + (partG * 0.1192) + (partB * 0.9505)
