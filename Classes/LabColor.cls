@@ -36,6 +36,7 @@ Option Explicit
 ' There is an off-by-one error with RGB values.
 '   Helped by: http://www.mrexcel.com/forum/members/stephencrump.html
 '   Forum Link: http://www.mrexcel.com/forum/excel-questions/975682-conversion-hex-rgb-xyz-lab-off-one-error.html
+'   Also help was given to tell about DECTOHEX and HEXTODEC functions that Microsoft already has, so that's awesome.
 
 
 
@@ -181,6 +182,8 @@ Const DEFAULT_EMPTY_VAL = -1
     
 
 Private Sub setRGBFromLong()
+    'For division here we use \ instead of / because of integer division
+    'https://msdn.microsoft.com/en-us/library/b6ex274z.aspx
     RGB_R = LongRGBval Mod 256
     RGB_G = (LongRGBval \ 256) Mod 256
     RGB_B = (LongRGBval \ 256 \ 256) Mod 256
@@ -315,126 +318,19 @@ Private Sub setRGBFromXYZ()
 End Sub
 
 Private Sub setHexFromRGB()
-    
-    HEX_Color = "#" & numberToHex(RGB_R) & numberToHex(RGB_G) & numberToHex(RGB_B)
-    
+    'Hex() is a built-in function of excel
+    HEX_Color = "#" & hex(RGB_R) & hex(RGB_G) & hex(RGB_B)
 End Sub
-
-Private Function numberToHex(ByVal number As Long) As String
-    Dim part1 As String
-    Dim part2 As String
-    
-    part1 = Int(number / 16)
-    part2 = number - (CLng(part1) * 16)
-    
-    If CLng(part1) > 9 Then
-        Select Case CLng(part1)
-            Case Is = 10
-                part1 = "A"
-            Case Is = 11
-                part1 = "B"
-            Case Is = 12
-                part1 = "C"
-            Case Is = 13
-                part1 = "D"
-            Case Is = 14
-                part1 = "E"
-            Case Is = 15
-                part1 = "F"
-        End Select
-    End If
-    
-    If CLng(part2) > 9 Then
-        Select Case CLng(part2)
-            Case Is = 10
-                part2 = "A"
-            Case Is = 11
-                part2 = "B"
-            Case Is = 12
-                part2 = "C"
-            Case Is = 13
-                part2 = "D"
-            Case Is = 14
-                part2 = "E"
-            Case Is = 15
-                part2 = "F"
-        End Select
-    End If
-    
-    numberToHex = part1 & part2
-    
-End Function
-
 
 Private Sub setRGBFromHex()
-    
-    RGB_R = hexValueToRGB(Mid(HEX_Color, 2, 2))
-    RGB_G = hexValueToRGB(Mid(HEX_Color, 4, 2))
-    RGB_B = hexValueToRGB(Mid(HEX_Color, 6, 2))
-    
+    'Anything in VB with &H in it will say it's a Hex value
+    RGB_R = CLng("&H" & Mid(HEX_Color, 2, 2))
+    RGB_G = CLng("&H" & Mid(HEX_Color, 4, 2))
+    RGB_B = CLng("&H" & Mid(HEX_Color, 6, 2))
 End Sub
 
-
-Private Function hexValueToRGB(ByVal hex As String) As Long
-
-    Dim part1 As String
-    Dim part2 As String
-    
-    part1 = UCase(Left(hex, 1))
-    part2 = UCase(Right(hex, 1))
-    
-    If IsNumeric(Left(hex, 1)) = True Then
-        part1 = Left(hex, 1)
-    Else
-        Select Case part1
-            Case Is = "A"
-                part1 = 10
-            Case Is = "B"
-                part1 = 11
-            Case Is = "C"
-                part1 = 12
-            Case Is = "D"
-                part1 = 13
-            Case Is = "E"
-                part1 = 14
-            Case Is = "F"
-                part1 = 15
-            Case Else
-                part1 = -1
-        End Select
-    End If
-    
-    If IsNumeric(Right(hex, 1)) = True Then
-        part2 = Right(hex, 1)
-    Else
-        Select Case part2
-            Case Is = "A"
-                part2 = 10
-            Case Is = "B"
-                part2 = 11
-            Case Is = "C"
-                part2 = 12
-            Case Is = "D"
-                part2 = 13
-            Case Is = "E"
-                part2 = 14
-            Case Is = "F"
-                part2 = 15
-            Case Else
-                part2 = -1
-        End Select
-    
-    End If
-    
-    hexValueToRGB = (16 * CLng(part1)) + CLng(part2)
-    
-End Function
-
-
 Public Function colorDifferenceLab(ByRef colorOne As LabColor, ByRef colorTwo As LabColor) As Double
-    
     colorDifferenceLab = Sqr((colorTwo.Lab_L - colorOne.Lab_L) ^ 2 + (colorTwo.Lab_A - colorOne.Lab_A) ^ 2 + (colorTwo.Lab_B - colorOne.Lab_B) ^ 2)
-
 End Function
 
 Public Function setColors() As Boolean
