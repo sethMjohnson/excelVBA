@@ -24,14 +24,27 @@ Option Explicit
 '   See the links below for more information.
 '
 'Links:
-'https://en.wikipedia.org/wiki/Lab_color_space
-'http://www.easyrgb.com/?X=MATH
-'http://entropymine.com/imageworsener/srgbformula/
+'   https://en.wikipedia.org/wiki/Lab_color_space
+'       \General knowledge/ equations
+'   http://www.easyrgb.com/?X=MATH
+'       \Equations
+'   http://entropymine.com/imageworsener/srgbformula/
+'   https://en.wikipedia.org/wiki/Color_difference
+'   https://www.researchgate.net/publication/236023905_Color_difference_Delta_E_-_A_survey
+'       \Has a scale for difference
+'   http://www.brucelindbloom.com/index.html
+'       \Equations
 '
-'Validation with: http://colormine.org/color-converter
+'Validation with:
+'   http://colormine.org/color-converter
+'   http://colormine.org/delta-e-calculator
+'   http://colormine.org/delta-e-calculator/cie94
 '
 'ToDos:
 ' Write in validation of values for everything
+' Work in difference ranges. "Just Noticeable Difference" is ~2.3, but need to find a scale.
+' Make the doubles in the differences as decimal? The values don't validate exactly to the validation site.
+'   Have to declare as variant, then typecast as cDec()
 '
 'ERRORS:
 '
@@ -184,8 +197,10 @@ Const DEFAULT_EMPTY_VAL = -1
             pHexColor = Value
         End If
     End Property
-    
 
+'''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+'     Sets of the different colors from all the other color spaces          '
+'''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
 Private Sub setRGBFromLong()
     'For division here we use \ instead of / because of integer division
     'https://msdn.microsoft.com/en-us/library/b6ex274z.aspx
@@ -338,10 +353,6 @@ Private Sub setRGBFromHex()
     RGB_B = CLng("&H" & Mid(HEX_Color, 6, 2))
 End Sub
 
-Public Function colorDifferenceLab(ByRef colorOne As LabColor, ByRef colorTwo As LabColor) As Double
-    colorDifferenceLab = Sqr((colorTwo.Lab_L - colorOne.Lab_L) ^ 2 + (colorTwo.Lab_A - colorOne.Lab_A) ^ 2 + (colorTwo.Lab_B - colorOne.Lab_B) ^ 2)
-End Function
-
 Public Function setColors() As Boolean
     Select Case True
         Case RGB_R <> DEFAULT_EMPTY_VAL And RGB_G <> DEFAULT_EMPTY_VAL And RGB_B <> DEFAULT_EMPTY_VAL
@@ -379,6 +390,9 @@ Public Function setColors() As Boolean
     End Select
 End Function
 
+'''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+'       Print table of all the different colors with their spaces           '
+'''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
 Public Function allColorValues(Optional ByVal tableStyle As Boolean = True) As String
 
     If setColors = True Then
@@ -424,3 +438,97 @@ Public Function allColorValues(Optional ByVal tableStyle As Boolean = True) As S
     End If
 
 End Function
+
+'''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+'     Functions that work on the color spaces and their differences         '
+'''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+Public Function colorDifferenceLab( _
+    ByRef colorOne As LabColor, _
+    ByRef colorTwo As LabColor, _
+    Optional ByVal CIE76 As Boolean = True, _
+    Optional ByVal graphics As Boolean = True) As Double
+    
+    'CIE76 by default
+    If CIE76 = True Then
+        'Using CIE76 formula
+        colorDifferenceLab = Sqr( _
+                                ((colorTwo.Lab_L - colorOne.Lab_L) ^ 2) + _
+                                ((colorTwo.Lab_A - colorOne.Lab_A) ^ 2) + _
+                                ((colorTwo.Lab_B - colorOne.Lab_B) ^ 2) _
+                                )
+    Else
+        'Use the CIE94 formula
+        'd for Delta, or change (difference)
+        'http://www.brucelindbloom.com/index.html?Eqn_DeltaE_CIE94.html
+        
+        'Variables
+        Dim dL As Double
+        Dim C1 As Double
+        Dim C2 As Double
+        Dim dC As Double
+        Dim dH As Double
+        Dim da As Double
+        Dim db As Double
+        Dim SL As Double
+        Dim SC As Double
+        Dim SH As Double
+        
+        'Constants
+        Dim K1 As Double
+        Dim K2 As Double
+        Dim kL As Double
+        Dim kC As Double: kC = 1#
+        Dim kH As Double: kH = 1#
+        
+        'Set Constants
+        If graphics = True Then
+            'Use the constants for graphics
+            K1 = 0.045
+            K2 = 0.015
+            kL = 1#
+        Else
+            'Use the constants for textiles
+            K1 = 0.048
+            K2 = 0.014
+            kL = 2#
+        End If
+        
+        'Set Variables
+        dL = colorOne.Lab_L - colorTwo.Lab_L
+        C1 = Sqr((colorOne.Lab_A ^ 2) + (colorOne.Lab_B ^ 2))
+        C2 = Sqr((colorTwo.Lab_A ^ 2) + (colorTwo.Lab_B ^ 2))
+        dC = C1 - C2
+        da = colorOne.Lab_A - colorTwo.Lab_A
+        db = colorOne.Lab_B - colorTwo.Lab_B
+        'dH = Sqr((da ^ 2) + (db ^ 2) - (dC ^ 2)) 'Limited precision might cause this to be slightly negative.
+            'To combat this, we will not take the square root, but square it. We will compensate for the rest of equation.
+            ' Bruce Lindbloom site shows this.
+        dH = (da ^ 2) + (db ^ 2) - (dC ^ 2)
+        SL = 1#
+        SC = 1# + (K1 * C1)
+        SH = 1# + (K2 * C1)
+        'Compensating for possible negative dH by using the equation below this one.
+'        colorDifferenceLab = _
+'            Sqr( _
+'                ((dL) / (kL * SL)) ^ 2 + _
+'                ((dC) / (kC * SC)) ^ 2 + _
+'                ((dH) / (kH * SH)) ^ 2 _
+'                )
+        colorDifferenceLab = _
+            Sqr( _
+                ((dL / (kL * SL)) ^ 2) + _
+                ((dC / (kC * SC)) ^ 2) + _
+                (dH / ((kH * SH) ^ 2)) _
+                )
+    End If
+End Function
+
+'dE is Delta E, or change
+'   0 < dE < 1 - observer does not notice the difference,
+'   1 < dE < 2 - only experienced observer can notice the difference
+'   2 < dE < 3.5 - unexperienced observer also notices the difference,
+' 3.5 < dE < 5 - clear difference in color is noticed,
+'   5 < dE - observer notices two different colors.
+'
+'From:
+'   https://www.researchgate.net/publication/236023905_Color_difference_Delta_E_-_A_survey
