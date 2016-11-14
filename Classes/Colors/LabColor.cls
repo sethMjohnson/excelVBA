@@ -15,7 +15,7 @@ Option Explicit
 ' 0.04045<S<=1            | L = ((S+0.055)/1.055)^2.4
 '
 'All equations are taken as:
-'   Observer. = 2Â°, Illuminant = D65
+'   Observer. = 2°, Illuminant = D65
 '
 'Lab color is used to approximate human vision.
 '   The closer the values are together, the closer to what it looks like.
@@ -30,14 +30,17 @@ Option Explicit
 '
 'Validation with: http://colormine.org/color-converter
 '
+'ToDos:
+' Upper and lower limits are broken? When using Hex code of 00FF00, eg
+' Write in validation of values for everything
+'
 'ERRORS:
 '
 'Fixed:
 ' There is an off-by-one error with RGB values.
 '   Helped by: http://www.mrexcel.com/forum/members/stephencrump.html
 '   Forum Link: http://www.mrexcel.com/forum/excel-questions/975682-conversion-hex-rgb-xyz-lab-off-one-error.html
-'   Also help was given to tell about DECTOHEX and HEXTODEC functions that Microsoft already has, so that's awesome.
-
+'   Also inspired to look into the built-in functions so I wouldn't have to use my own for Hex values
 
 
 Const DEFAULT_EMPTY_VAL = -1
@@ -235,7 +238,7 @@ Private Sub setXYZFromRGB()
     partG = partG * 100
     partB = partB * 100
     
-    'Observer. = 2Â°, Illuminant = D65
+    'Observer. = 2°, Illuminant = D65
     Linear_X = (partR * 0.4124) + (partG * 0.3576) + (partB * 0.1805)
     Linear_Y = (partR * 0.2126) + (partG * 0.7152) + (partB * 0.0722)
     Linear_Z = (partR * 0.0193) + (partG * 0.1192) + (partB * 0.9505)
@@ -318,8 +321,12 @@ Private Sub setRGBFromXYZ()
 End Sub
 
 Private Sub setHexFromRGB()
+    Dim strHex As String
     'Hex() is a built-in function of excel
-    HEX_Color = "#" & hex(RGB_R) & hex(RGB_G) & hex(RGB_B)
+    'Format using @ displays a character or a space. Then we'll replace the spaces with 0s.
+    strHex = "#" & Format(hex(RGB_R), "@@") & Format(hex(RGB_G), "@@") & Format(hex(RGB_B), "@@")
+    strHex = Replace(strHex, " ", "0")
+    HEX_Color = strHex
 End Sub
 
 Private Sub setRGBFromHex()
