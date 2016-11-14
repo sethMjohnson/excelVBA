@@ -31,7 +31,12 @@ Option Explicit
 'Validation with: http://colormine.org/color-converter
 '
 'ERRORS:
+'
+'Fixed:
 ' There is an off-by-one error with RGB values.
+'   Helped by: http://www.mrexcel.com/forum/members/stephencrump.html
+'   Forum Link: http://www.mrexcel.com/forum/excel-questions/975682-conversion-hex-rgb-xyz-lab-off-one-error.html
+
 
 
 Const DEFAULT_EMPTY_VAL = -1
@@ -177,8 +182,8 @@ Const DEFAULT_EMPTY_VAL = -1
 
 Private Sub setRGBFromLong()
     RGB_R = LongRGBval Mod 256
-    RGB_G = (LongRGBval / 256) Mod 256
-    RGB_B = (LongRGBval / 256 / 256) Mod 256
+    RGB_G = (LongRGBval \ 256) Mod 256
+    RGB_B = (LongRGBval \ 256 \ 256) Mod 256
 End Sub
 
 Private Sub setLongFromRGB()
