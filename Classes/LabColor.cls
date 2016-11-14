@@ -360,7 +360,68 @@ End Function
 
 Private Sub setRGBFromHex()
     
+    RGB_R = hexValueToRGB(Mid(HEX_Color, 2, 2))
+    RGB_G = hexValueToRGB(Mid(HEX_Color, 4, 2))
+    RGB_B = hexValueToRGB(Mid(HEX_Color, 6, 2))
+    
 End Sub
+
+
+Private Function hexValueToRGB(ByVal hex As String) As Long
+
+    Dim part1 As String
+    Dim part2 As String
+    
+    part1 = UCase(Left(hex, 1))
+    part2 = UCase(Right(hex, 1))
+    
+    If IsNumeric(Left(hex, 1)) = True Then
+        part1 = Left(hex, 1)
+    Else
+        Select Case part1
+            Case Is = "A"
+                part1 = 10
+            Case Is = "B"
+                part1 = 11
+            Case Is = "C"
+                part1 = 12
+            Case Is = "D"
+                part1 = 13
+            Case Is = "E"
+                part1 = 14
+            Case Is = "F"
+                part1 = 15
+            Case Else
+                part1 = -1
+        End Select
+    End If
+    
+    If IsNumeric(Right(hex, 1)) = True Then
+        part2 = Right(hex, 1)
+    Else
+        Select Case part2
+            Case Is = "A"
+                part2 = 10
+            Case Is = "B"
+                part2 = 11
+            Case Is = "C"
+                part2 = 12
+            Case Is = "D"
+                part2 = 13
+            Case Is = "E"
+                part2 = 14
+            Case Is = "F"
+                part2 = 15
+            Case Else
+                part2 = -1
+        End Select
+    
+    End If
+    
+    hexValueToRGB = (16 * CLng(part1)) + CLng(part2)
+    
+End Function
+
 
 Public Function colorDifferenceLab(ByRef colorOne As LabColor, ByRef colorTwo As LabColor) As Double
     
@@ -394,11 +455,12 @@ Public Function setColors() As Boolean
             setLabFromXYZ
             setHexFromRGB
             setColors = True
-        Case HEX_Color <> DEFAULT_EMPTY_VAL
-            'setRGBFromHex
+        Case CStr(HEX_Color) <> CStr(DEFAULT_EMPTY_VAL)
+            setRGBFromHex
             setLongFromRGB
             setXYZFromRGB
             setLabFromXYZ
+            setColors = True
         Case Else
             setColors = False
     End Select
