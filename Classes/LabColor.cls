@@ -15,7 +15,7 @@ Option Explicit
 ' 0.04045<S<=1            | L = ((S+0.055)/1.055)^2.4
 '
 'All equations are taken as:
-'   Observer. = 2Â°, Illuminant = D65
+'   Observer. = 2°, Illuminant = D65
 '
 'Lab color is used to approximate human vision.
 '   The closer the values are together, the closer to what it looks like.
@@ -50,7 +50,7 @@ Const DEFAULT_EMPTY_VAL = -1
     Private pLabColorB As Double
     Private pLabColorFull As Double
     'Hex
-    Private pHexColor As String     'Not implemented, but a ToDo
+    Private pHexColor As String
     
     'Initilization of values
     Private Sub Class_Initialize()
@@ -69,7 +69,7 @@ Const DEFAULT_EMPTY_VAL = -1
         pLabColorA = DEFAULT_EMPTY_VAL
         pLabColorB = DEFAULT_EMPTY_VAL
         
-        pHexColor = "" '?
+        pHexColor = DEFAULT_EMPTY_VAL
     End Sub
 
     'Class Properties
@@ -161,13 +161,16 @@ Const DEFAULT_EMPTY_VAL = -1
         pLabColorB = Value
     End Property
     
-'LAB_ color, full
-'    Public Property Get Lab_Full() As Double
-'
-'    End Property
-'    Public Property Let Lab_Full(Value As Double)
-'        pLabColorFull = L * A * B
-'    End Property
+'Hex color
+    Public Property Get HEX_Color() As String
+        HEX_Color = pHexColor
+    End Property
+    Public Property Let HEX_Color(Value As String)
+        If Len(Value) = 7 And Left(Value, 1) = "#" Then
+            pHexColor = Value
+        End If
+    End Property
+    
 
 Private Sub setRGBFromLong()
     RGB_R = LongRGBval Mod 256
@@ -221,7 +224,7 @@ Private Sub setXYZFromRGB()
     partG = partG * 100
     partB = partB * 100
     
-    'Observer. = 2Â°, Illuminant = D65
+    'Observer. = 2°, Illuminant = D65
     Linear_X = (partR * 0.4124) + (partG * 0.3576) + (partB * 0.1805)
     Linear_Y = (partR * 0.2126) + (partG * 0.7152) + (partB * 0.0722)
     Linear_Z = (partR * 0.0193) + (partG * 0.1192) + (partB * 0.9505)
@@ -303,6 +306,62 @@ Private Sub setRGBFromXYZ()
     RGB_B = partB * 255
 End Sub
 
+Public Sub setHexFromRGB()
+    
+    HEX_Color = "#" & numberToHex(RGB_R) & numberToHex(RGB_G) & numberToHex(RGB_B)
+    
+End Sub
+
+Public Function numberToHex(ByVal number As Long) As String
+    Dim part1 As String
+    Dim part2 As String
+    
+    part1 = Int(number / 16)
+    part2 = number - (CLng(part1) * 16)
+    
+    If CLng(part1) > 9 Then
+        Select Case CLng(part1)
+            Case Is = 10
+                part1 = "A"
+            Case Is = 11
+                part1 = "B"
+            Case Is = 12
+                part1 = "C"
+            Case Is = 13
+                part1 = "D"
+            Case Is = 14
+                part1 = "E"
+            Case Is = 15
+                part1 = "F"
+        End Select
+    End If
+    
+    If CLng(part2) > 9 Then
+        Select Case CLng(part2)
+            Case Is = 10
+                part2 = "A"
+            Case Is = 11
+                part2 = "B"
+            Case Is = 12
+                part2 = "C"
+            Case Is = 13
+                part2 = "D"
+            Case Is = 14
+                part2 = "E"
+            Case Is = 15
+                part2 = "F"
+        End Select
+    End If
+    
+    numberToHex = part1 & part2
+    
+End Function
+
+
+Private Sub setRGBFromHex()
+    
+End Sub
+
 Public Function colorDifferenceLab(ByRef colorOne As LabColor, ByRef colorTwo As LabColor) As Double
     
     colorDifferenceLab = Sqr((colorTwo.Lab_L - colorOne.Lab_L) ^ 2 + (colorTwo.Lab_A - colorOne.Lab_A) ^ 2 + (colorTwo.Lab_B - colorOne.Lab_B) ^ 2)
@@ -315,22 +374,31 @@ Public Function setColors() As Boolean
             setLongFromRGB
             setXYZFromRGB
             setLabFromXYZ
+            setHexFromRGB
             setColors = True
         Case LongRGBval <> DEFAULT_EMPTY_VAL
             setRGBFromLong
             setXYZFromRGB
             setLabFromXYZ
+            setHexFromRGB
             setColors = True
         Case Lab_L <> DEFAULT_EMPTY_VAL And Lab_A <> DEFAULT_EMPTY_VAL And Lab_B <> DEFAULT_EMPTY_VAL
             setXYZFromLab
             setRGBFromXYZ
             setLongFromRGB
+            setHexFromRGB
             setColors = True
         Case Linear_X <> DEFAULT_EMPTY_VAL And Linear_Y <> DEFAULT_EMPTY_VAL And Linear_Z <> DEFAULT_EMPTY_VAL
             setRGBFromXYZ
             setLongFromRGB
             setLabFromXYZ
+            setHexFromRGB
             setColors = True
+        Case HEX_Color <> DEFAULT_EMPTY_VAL
+            'setRGBFromHex
+            setLongFromRGB
+            setXYZFromRGB
+            setLabFromXYZ
         Case Else
             setColors = False
     End Select
@@ -348,6 +416,9 @@ Public Function allColorValues(Optional ByVal tableStyle As Boolean = True) As S
                              vbTab & vbTab & vbTab & vbTab & vbTab & vbTab & vbTab & vbTab & vbTab & vbTab & vbTab & vbTab & vbTab & vbTab & vbTab & vbTab & "|" & vbCrLf & _
                              "___Long_________" & vbTab & vbTab & vbTab & vbTab & vbTab & vbTab & vbTab & vbTab & vbTab & vbTab & vbTab & vbTab & "|" & vbCrLf & _
                              "Long:" & vbTab & Format(LongRGBval, "00000000") & vbTab & vbTab & vbTab & vbTab & vbTab & vbTab & vbTab & vbTab & vbTab & vbTab & vbTab & vbTab & "|" & vbCrLf & _
+                             vbTab & vbTab & vbTab & vbTab & vbTab & vbTab & vbTab & vbTab & vbTab & vbTab & vbTab & vbTab & vbTab & vbTab & vbTab & vbTab & "|" & vbCrLf & _
+                             "___Hexadecimal__" & vbTab & vbTab & vbTab & vbTab & vbTab & vbTab & vbTab & vbTab & vbTab & vbTab & vbTab & vbTab & "|" & vbCrLf & _
+                             "Hex:" & vbTab & HEX_Color & vbTab & vbTab & vbTab & vbTab & vbTab & vbTab & vbTab & vbTab & vbTab & vbTab & vbTab & vbTab & vbTab & "|" & vbCrLf & _
                              "________________________________________________________________|"
 
         
@@ -360,6 +431,8 @@ Public Function allColorValues(Optional ByVal tableStyle As Boolean = True) As S
                              vbCrLf & _
                              "___Long___" & vbCrLf & _
                              "Long:" & vbTab & LongRGBval & vbCrLf & _
+                             "___Hex___" & vbCrLf & _
+                             "Hex Color:" & vbTab & HEX_Color & vbCrLf & _
                              vbCrLf & _
                              "___XYZ___" & vbCrLf & _
                              "Linear X:" & vbTab & Format(Linear_X, "0.0000") & vbCrLf & _
