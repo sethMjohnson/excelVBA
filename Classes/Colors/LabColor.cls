@@ -523,12 +523,42 @@ Public Function colorDifferenceLab( _
     End If
 End Function
 
-'dE is Delta E, or change
-'   0 < dE < 1 - observer does not notice the difference,
-'   1 < dE < 2 - only experienced observer can notice the difference
-'   2 < dE < 3.5 - unexperienced observer also notices the difference,
-' 3.5 < dE < 5 - clear difference in color is noticed,
-'   5 < dE - observer notices two different colors.
-'
-'From:
-'   https://www.researchgate.net/publication/236023905_Color_difference_Delta_E_-_A_survey
+Public Function significantDifferance(ByVal difference As Double) As Long
+    
+    'dE is Delta E, or change
+    '   0 < dE < 1 - observer does not notice the difference,
+    '   1 < dE < 2 - only experienced observer can notice the difference
+    '   2 < dE < 3.5 - unexperienced observer also notices the difference,
+    ' 3.5 < dE < 5 - clear difference in color is noticed,
+    '   5 < dE - observer notices two different colors.
+    '
+    'From:
+    '   https://www.researchgate.net/publication/236023905_Color_difference_Delta_E_-_A_survey
+    Select Case True
+        Case 0 < difference And difference < 1
+            significantDifferance = 0
+        Case 1 < difference And difference < 2
+            significantDifferance = 1
+        Case 2 < difference And difference < 3.5
+            significantDifferance = 2
+        Case 3.5 < difference And difference < 5
+            significantDifferance = 3
+        Case Else
+            significantDifferance = 4
+    End Select
+End Function
+
+Public Function significantDifferenceText(ByVal difference As Double) As String
+    Select Case True
+        Case 0 < difference And difference < 1
+            significantDifferenceText = "0/4: No significant difference."
+        Case 1 < difference And difference < 2
+            significantDifferenceText = "1/4: Experienced observer notices."
+        Case 2 < difference And difference < 3.5
+            significantDifferenceText = "2/4: Unexperienced observer notices."
+        Case 3.5 < difference And difference < 5
+            significantDifferenceText = "3/4: Clear difference in color."
+        Case Else
+            significantDifferenceText = "4/4: Any observer notices different colors."
+    End Select
+End Function
