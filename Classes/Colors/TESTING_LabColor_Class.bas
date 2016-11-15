@@ -33,7 +33,7 @@ Sub testerColorer22()
     Dim strDiff As String
 
     Dim selection As Long
-        selection = 13
+        selection = 44
         
     Select Case selection
         Case Is = 1
@@ -48,6 +48,10 @@ Sub testerColorer22()
             'good difference
             mycolor.LongRGBval = RGB(146, 146, 31)
             mycolor2.LongRGBval = RGB(131, 131, 31)
+        Case Is = 4
+            'slightly off
+            mycolor.LongRGBval = RGB(255, 25, 137)
+            mycolor2.LongRGBval = RGB(253, 23, 133)
         Case Else
             'radically different
             mycolor.LongRGBval = RGB(255, 255, 255)
@@ -57,13 +61,14 @@ Sub testerColorer22()
     mycolor.setColors
     mycolor2.setColors
     
-'    Debug.Print mycolor.allColorValues
-'    Debug.Print mycolor2.allColorValues
+    Debug.Print mycolor.allColorValues
+    Debug.Print mycolor2.allColorValues
     Debug.Print vbCrLf
     strDiff = "Color Difference CIE76: " & Format(mycolor.colorDifferenceLab(mycolor, mycolor2), "#0.000")
     Debug.Print strDiff
-    strDiff = "Color Difference CIE94: " & Format(mycolor.colorDifferenceLab(mycolor, mycolor2, False, False), "#0.000")
+    strDiff = "Color Difference CIE94: " & Format(mycolor.colorDifferenceLab(mycolor, mycolor2, False), "#0.000")
     Debug.Print strDiff
+    Debug.Print mycolor.significantDifferenceText(mycolor.colorDifferenceLab(mycolor, mycolor2, False))
 
 End Sub
 Sub colorTesting()
