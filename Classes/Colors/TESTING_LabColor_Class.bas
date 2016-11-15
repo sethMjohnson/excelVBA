@@ -7,6 +7,8 @@ Sub testerColorer()
         Set mycolor = New LabColor
     Dim mycolor2 As LabColor
         Set mycolor2 = New LabColor
+        
+    Dim strDiff As String
 
     mycolor.LongRGBval = Cells(1, 1).Interior.color
     mycolor2.LongRGBval = Cells(1, 2).Interior.color
@@ -16,10 +18,54 @@ Sub testerColorer()
     
     Debug.Print mycolor.allColorValues
     Debug.Print mycolor2.allColorValues
-    Debug.Print "Color Difference : " & Format(mycolor.colorDifferenceLab(mycolor, mycolor2), "#0.000")
+    strDiff = "Color Difference : " & Format(mycolor.colorDifferenceLab(mycolor, mycolor2), "#0.000")
+    Debug.Print strDiff
+    Cells(1, 3).Value = strDiff
 
 End Sub
+Sub testerColorer22()
 
+    Dim mycolor As LabColor
+        Set mycolor = New LabColor
+    Dim mycolor2 As LabColor
+        Set mycolor2 = New LabColor
+        
+    Dim strDiff As String
+
+    Dim selection As Long
+        selection = 13
+        
+    Select Case selection
+        Case Is = 1
+            'similar colors, but in 76 standard have high difference
+            mycolor.LongRGBval = RGB(255, 25, 137)
+            mycolor2.LongRGBval = RGB(255, 25, 131)
+        Case Is = 2
+            'slightly less similar
+            mycolor.LongRGBval = RGB(31, 146, 255)
+            mycolor2.LongRGBval = RGB(31, 140, 255)
+        Case Is = 3
+            'good difference
+            mycolor.LongRGBval = RGB(146, 146, 31)
+            mycolor2.LongRGBval = RGB(131, 131, 31)
+        Case Else
+            'radically different
+            mycolor.LongRGBval = RGB(255, 255, 255)
+            mycolor2.LongRGBval = RGB(0, 0, 0)
+    End Select
+
+    mycolor.setColors
+    mycolor2.setColors
+    
+'    Debug.Print mycolor.allColorValues
+'    Debug.Print mycolor2.allColorValues
+    Debug.Print vbCrLf
+    strDiff = "Color Difference CIE76: " & Format(mycolor.colorDifferenceLab(mycolor, mycolor2), "#0.000")
+    Debug.Print strDiff
+    strDiff = "Color Difference CIE94: " & Format(mycolor.colorDifferenceLab(mycolor, mycolor2, False, False), "#0.000")
+    Debug.Print strDiff
+
+End Sub
 Sub colorTesting()
 
     Dim mycolor1 As LabColor
@@ -36,12 +82,12 @@ Sub colorTesting()
     Dim response6 As String
     
     'Everything is set off of mycolor1.
-    ' Need to set off 1, or it's time-consuming to get the XYZ and Lab _
+    ' Need to set off mycolor1, or it's time-consuming to get the XYZ and Lab _
     '   values to set the rest. You'll need more than 4 decimal points out _
     '   to make sure that all the responses match.
         
         Set mycolor1 = New LabColor
-    mycolor1.HEX_Color = "#1C2B3F"
+    mycolor1.HEX_Color = "#F02B3F"
     response1 = mycolor1.allColorValues
         
         Set mycolor2 = New LabColor
