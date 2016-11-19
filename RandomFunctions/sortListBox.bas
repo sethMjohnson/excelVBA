@@ -2,6 +2,8 @@ Sub sortListbox( _
                 ByRef ourList As MSForms.ListBox, _
                 Optional ByVal columnIndexToSort As Long = 0, _
                 Optional ByVal Ascending As Boolean = True)
+    'Call this routine without parentheses
+    ' Ex: sortListbox Me.TheList
     Dim counterOuter As Long
     Dim counterInner As Long
     Dim counterColumns As Long
