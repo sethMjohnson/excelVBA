@@ -22,8 +22,8 @@ Sub removeSelectedItemListbox( _
                     
                 Case vbCancel:
                     'Exit out of removing things
-                    
-                
+                    Exit Do
+          
                 Case Else
                     'NOTHING
             End Select
