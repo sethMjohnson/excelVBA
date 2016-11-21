@@ -2,14 +2,19 @@ Attribute VB_Name = "iniForms"
 
 Option Explicit
 Function FormINI(ByRef formUsing As UserForm, _
-                 ByVal strINIpath As String, _
-                 ByVal actionINI As iniAction)
-    Dim ctrl As Control 'Generic control to loop through
+                 ByVal actionINI As iniAction, _
+                 Optional ByVal strINIpath As String)
+    ' Updated 21 Nov 2016
+    Dim ctrl As control 'Generic control to loop through
     Dim strINIValue As String   'Holding string to make sure all values exist,
                                 ' as we wouldn't want to write over a value if there is an error.
     Dim strINIValueInner As String 'Inner loop inner
     Dim boolAlreadyDeleted As Boolean: boolAlreadyDeleted = False   'If we already deleted then don't delete again
     'Section / Key / Path / Value for Key
+    
+    'No path specified, use the workbooks path
+    If strINIpath = "" Then _
+        strINIpath = ThisWorkbook.Path & "\" & ThisWorkbook.Name & ".ini"
     
     'For ListBoxes
     Dim counterIndex As Long 'Generic counter to loop index
