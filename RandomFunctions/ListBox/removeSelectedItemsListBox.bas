@@ -2,6 +2,8 @@ Sub removeSelectedItemListbox( _
                               ByRef ourList As MSForms.ListBox)
     'Call this routine without parentheses
     ' Ex: removeSelectedItemListbox Me.TheList
+    ' OR, just use the Call keyword
+    ' Ex: Call removeSelectedItemListbox(Me.TheList)
     Dim counter As Long
     Dim userChoice As Long
     
