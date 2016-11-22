@@ -4,6 +4,9 @@ Sub sortListbox( _
                 Optional ByVal Ascending As Boolean = True)
     'Call this routine without parentheses
     ' Ex: sortListbox Me.TheList
+    ' OR, just use the Call keyword
+    ' Ex: Call sortListbox(Me.TheList)
+    Dim counterOuter As Long
     Dim counterOuter As Long
     Dim counterInner As Long
     Dim counterColumns As Long
