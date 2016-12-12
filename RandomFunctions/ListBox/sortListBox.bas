@@ -1,3 +1,4 @@
+'Author: Seth Michael Johnson
 Sub sortListbox( _
                 ByRef ourList As MSForms.ListBox, _
                 Optional ByVal columnIndexToSort As Long = 0, _
