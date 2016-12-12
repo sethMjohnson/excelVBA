@@ -1,4 +1,4 @@
-'Author: Seth Michael Johnson
+'https://github.com/sethMjohnson/excelVBA
 Sub sortListbox( _
                 ByRef ourList As MSForms.ListBox, _
                 Optional ByVal columnIndexToSort As Long = 0, _
