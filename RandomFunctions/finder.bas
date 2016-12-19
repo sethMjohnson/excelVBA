@@ -2,8 +2,10 @@ Option Explicit
 
 Function findMe(ByVal strSearchTerm As String, _
                 Optional ByRef rngToSearch As Range, _
+                Optional ByVal findAll As Boolean = False, _
+                Optional ByRef rngAfter As Range, _
                 Optional ByVal turnOffAutoFilter As Boolean) As Range
-    '23 Nov 2016
+    '19 Dec 2016
     'Returns the range that the string was found.
     ' If no range is passed, will search the entire active sheet.
     ' If nothing is found, will return Nothing
@@ -12,7 +14,18 @@ Function findMe(ByVal strSearchTerm As String, _
     
     If rngToSearch Is Nothing Then _
         Set rngToSearch = ActiveSheet.UsedRange
-    
+        
+    If rngAfter Is Nothing Then _
+        Set rngAfter = rngToSearch.Cells(rngToSearch.Cells.Count)
+        
+    'Make sure rngAfter is in the searcheable range
+    If rngAfter.Parent.Name <> rngToSearch.Parent.Name Then
+        Set rngAfter = rngToSearch.Cells(rngToSearch.Cells.Count)
+    Else
+        If Application.Intersect(rngAfter, rngToSearch) Is Nothing Then _
+            Set rngAfter = rngToSearch.Cells(rngToSearch.Cells.Count)
+    End If
+        
     'If the range to search is passed as a range, but doesn't have anything in it, _
     '   an error will occur. So if you try to count rows or columns and there actually _
     '   isn't anything there, it will exit the function.
@@ -27,7 +40,7 @@ Function findMe(ByVal strSearchTerm As String, _
     End If
     
     Set findMe = rngToSearch.Find(What:=strSearchTerm, _
-                                    After:=rngToSearch.Cells(rngToSearch.Cells.Count), _
+                                    After:=rngAfter, _
                                     LookIn:=xlValues, _
                                     LookAt:=xlWhole, _
                                     SearchOrder:=xlByRows, _
