@@ -1,0 +1,5 @@
+Function lastColumn(Optional rowNumber As Long = 1, _
+                    Optional wksht As Worksheet)
+    If wksht Is Nothing Then Set wksht = ActiveSheet
+    lastColumn = wksht.Cells(rowNumber, wksht.Columns.Count).End(xlToLeft).Column
+End Function
