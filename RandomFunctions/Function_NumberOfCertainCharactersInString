@@ -1,0 +1,5 @@
+Function numCertainCharacterInString( _
+        ByVal ourString As String, _
+        ByVal findCharacter As String) As Long
+    numCertainCharacterInString = Len(ourString) - Len(Replace(ourString, findCharacter, ""))
+End Function
