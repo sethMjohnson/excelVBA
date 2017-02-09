@@ -1,0 +1,11 @@
+Function getAllKeyValueDict( _
+        ByRef ourDict As Dictionary) As String
+'    'See what's in the Dictionary
+'    Call getAllKeyValueDict(theDict)
+    Dim ourKey As Variant
+    
+    For Each ourKey In ourDict.Keys
+        getAllKeyValueDict = getAllKeyValueDict & vbCrLf & " KEY: " & ourKey & " || ITEM: " & ourDict(ourKey)
+    Next ourKey
+
+End Function
