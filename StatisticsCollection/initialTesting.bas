@@ -2,7 +2,7 @@ Attribute VB_Name = "modStuff"
 Option Explicit
 Const EXCEL_MAX_ROWS = 1048576
 
-'08 Feb 2017
+'13 Feb 2017
 
 Sub main()
 
@@ -100,6 +100,9 @@ Sub getSampleIDsAndAddresses( _
         ByRef ourDict As Dictionary, _
         ByRef ourSheet As Worksheet)
     
+    ' Chr(39) is the apostrophe "'" character.
+    '   It's needed for the sheets
+    
     'Variable Declaration
     Dim optionNum As Long   'Sample IDs based on selection. Options:
                             ' 1) If one cell, use whole column, and check for header
@@ -136,10 +139,10 @@ Sub getSampleIDsAndAddresses( _
         For counter = 2 To rngForSamples.Rows.Count
             If ourDict.Exists(rngForSamples.Cells(counter, 1).Value) = True Then
                 ourDict.Item(rngForSamples.Cells(counter, 1).Value) = _
-                            ourDict.Item(rngForSamples.Cells(counter, 1).Value) & "," & ourSheet.Name & "!" & rngForSamples.Cells(counter, 1).Address
+                            ourDict.Item(rngForSamples.Cells(counter, 1).Value) & "," & Chr(39) & ourSheet.Name & Chr(39) & "!" & rngForSamples.Cells(counter, 1).Address
             Else
                 ourDict.Add rngForSamples.Cells(counter, 1).Value, _
-                            ourSheet.Name & "!" & rngForSamples.Cells(counter, 1).Address
+                            Chr(39) & ourSheet.Name & Chr(39) & "!" & rngForSamples.Cells(counter, 1).Address
             End If
         Next counter
         
@@ -147,10 +150,10 @@ Sub getSampleIDsAndAddresses( _
         For counter = 1 To rngForSamples.Rows.Count
             If ourDict.Exists(rngForSamples.Cells(counter, 1).Value) = True Then
                 ourDict.Item(rngForSamples.Cells(counter, 1).Value) = _
-                            ourDict.Item(rngForSamples.Cells(counter, 1).Value) & "," & ourSheet.Name & "!" & rngForSamples.Cells(counter, 1).Address
+                            ourDict.Item(rngForSamples.Cells(counter, 1).Value) & "," & Chr(39) & ourSheet.Name & Chr(39) & "!" & rngForSamples.Cells(counter, 1).Address
             Else
                 ourDict.Add rngForSamples.Cells(counter, 1).Value, _
-                            ourSheet.Name & "!" & rngForSamples.Cells(counter, 1).Address
+                            Chr(39) & ourSheet.Name & Chr(39) & "!" & rngForSamples.Cells(counter, 1).Address
             End If
         Next counter
     End If
