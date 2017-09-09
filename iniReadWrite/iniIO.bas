@@ -1,3 +1,4 @@
+-Attribute VB_Name = "iniIO"
 Option Explicit
 
 Global Const c_KEY_DOES_NOT_EXIST = "DNE: Key Does Not Exist"
