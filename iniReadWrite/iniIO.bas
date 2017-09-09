@@ -1,4 +1,3 @@
-Attribute VB_Name = "iniIO"
 Option Explicit
 
 Global Const c_KEY_DOES_NOT_EXIST = "DNE: Key Does Not Exist"
@@ -10,22 +9,41 @@ Global Const c_KEY_DOES_NOT_EXIST = "DNE: Key Does Not Exist"
 ' API Functions for Reading and Writing to INI File
 '++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-' Declare for reading INI files.
-Private Declare Function GetPrivateProfileString Lib "kernel32" _
-    Alias "GetPrivateProfileStringA" (ByVal lpApplicationName As String, _
-                                      ByVal lpKeyName As Any, _
-                                      ByVal lpDefault As String, _
-                                      ByVal lpReturnedString As String, _
-                                      ByVal nSize As Long, _
-                                      ByVal lpFileName As String) As Long
-                                      
-' Declare for writing INI files.
-Private Declare Function WritePrivateProfileString Lib "kernel32" _
-    Alias "WritePrivateProfileStringA" (ByVal lpApplicationName As String, _
-                                        ByVal lpKeyName As Any, _
-                                        ByVal lpString As Any, _
-                                        ByVal lpFileName As String) As Long
-
+#If Win64 Then
+   'System Functions, see comment below:
+   'All of these are the same as in the "Else" portion, except with "PtrSafe" included,
+   '  for 64-bit systems. Below this section are the explanations for what these do.
+    ' Declare for reading INI files.
+    Private Declare PtrSafe Function GetPrivateProfileString Lib "kernel32" _
+        Alias "GetPrivateProfileStringA" (ByVal lpApplicationName As String, _
+                                          ByVal lpKeyName As Any, _
+                                          ByVal lpDefault As String, _
+                                          ByVal lpReturnedString As String, _
+                                          ByVal nSize As Long, _
+                                          ByVal lpFileName As String) As Long
+                                          
+    ' Declare for writing INI files.
+    Private Declare PtrSafe Function WritePrivateProfileString Lib "kernel32" _
+        Alias "WritePrivateProfileStringA" (ByVal lpApplicationName As String, _
+                                            ByVal lpKeyName As Any, _
+                                            ByVal lpString As Any, _
+                                            ByVal lpFileName As String) As Long
+#Else
+    Private Declare Function GetPrivateProfileString Lib "kernel32" _
+        Alias "GetPrivateProfileStringA" (ByVal lpApplicationName As String, _
+                                          ByVal lpKeyName As Any, _
+                                          ByVal lpDefault As String, _
+                                          ByVal lpReturnedString As String, _
+                                          ByVal nSize As Long, _
+                                          ByVal lpFileName As String) As Long
+                                          
+    ' Declare for writing INI files.
+    Private Declare Function WritePrivateProfileString Lib "kernel32" _
+        Alias "WritePrivateProfileStringA" (ByVal lpApplicationName As String, _
+                                            ByVal lpKeyName As Any, _
+                                            ByVal lpString As Any, _
+                                            ByVal lpFileName As String) As Long
+#End If
 
 '++++++++++++++++++++++++++++++++++++++++++++++++++++
 ' Enumeration for ManageINI funtion
@@ -58,6 +76,7 @@ Function ManageINI(actionINI As iniAction, _
 '
 ' Name:                 Date:           Init:   Modification:
 ' ManageINI             26-Nov-2013     SCL     Original development
+' Function Declares     09-Sep-2017     SMJ     Added to allow 64-bit
 '
 ' Arguments:    actionINI       The action to take in the function, reading or writing to
 '                               to the INI file. Uses the enumeration iniAction in the
