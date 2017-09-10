@@ -1,6 +1,6 @@
 Attribute VB_Name = "iniForms"
-
 Option Explicit
+
 Function FormINI(ByRef formUsing As UserForm, _
                  ByVal actionINI As iniAction, _
                  Optional ByVal strINIpath As String)
@@ -55,6 +55,10 @@ Function FormINI(ByRef formUsing As UserForm, _
                 
                 Case "CommandButton"
                 
+                Case "OptionButton"
+                    Call ManageINI(actionINI, ctrl.Name, "Name", strINIpath, ctrl.Name)
+                    Call ManageINI(actionINI, ctrl.Name, "Value", strINIpath, ctrl.Value)
+                
                 Case "Frame"
                 
                 Case "MultiPage"
@@ -74,7 +78,7 @@ Function FormINI(ByRef formUsing As UserForm, _
                     Next counterIndex
                     
                 Case Else
-                    MsgBox TypeName(ctrl) & " :: Not found in Select."
+                    MsgBox TypeName(ctrl) & " :" & ctrl.Name & ": Not found in routine to save the form's options."
             End Select
         Else
             'Reading, so read all the things into the controls
@@ -98,6 +102,10 @@ Function FormINI(ByRef formUsing As UserForm, _
                 Case "ComboBox"
                 
                 Case "CommandButton"
+                
+                Case "OptionButton"
+                    strINIValue = ManageINI(actionINI, ctrl.Name, "Value", strINIpath)
+                        If strINIValue <> c_KEY_DOES_NOT_EXIST Then ctrl.Value = strINIValue
                 
                 Case "Frame"
                 
@@ -138,7 +146,7 @@ Function FormINI(ByRef formUsing As UserForm, _
                     Loop While strINIValue <> c_KEY_DOES_NOT_EXIST
                     
                 Case Else
-                    MsgBox TypeName(ctrl) & " :: Not found in Select."
+                    MsgBox TypeName(ctrl) & " :" & ctrl.Name & ": Not found in routine to load the form's options."
             End Select
         End If
                 
