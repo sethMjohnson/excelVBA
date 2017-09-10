@@ -52,6 +52,7 @@ Function FormINI(ByRef formUsing As UserForm, _
                     Call ManageINI(actionINI, ctrl.Name, "Value", strINIpath, ctrl.Value)
                     
                 Case "ComboBox"
+                    Call ManageINI(actionINI, ctrl.Name, "Value", strINIpath, ctrl.Value)
                 
                 Case "CommandButton"
                 
@@ -100,6 +101,8 @@ Function FormINI(ByRef formUsing As UserForm, _
                         If strINIValue <> c_KEY_DOES_NOT_EXIST Then ctrl.Value = strINIValue
                     
                 Case "ComboBox"
+                    strINIValue = ManageINI(actionINI, ctrl.Name, "Value", strINIpath)
+                        If strINIValue <> c_KEY_DOES_NOT_EXIST Then ctrl.Value = strINIValue
                 
                 Case "CommandButton"
                 
