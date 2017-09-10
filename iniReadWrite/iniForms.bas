@@ -4,7 +4,7 @@ Option Explicit
 Function FormINI(ByRef formUsing As UserForm, _
                  ByVal actionINI As iniAction, _
                  Optional ByVal strINIpath As String)
-    ' Updated 21 Nov 2016
+    ' Updated 10 Sep 2017
     Dim ctrl As control 'Generic control to loop through
     Dim strINIValue As String   'Holding string to make sure all values exist,
                                 ' as we wouldn't want to write over a value if there is an error.
@@ -16,7 +16,7 @@ Function FormINI(ByRef formUsing As UserForm, _
     If strINIpath = "" Then _
         strINIpath = ThisWorkbook.Path & "\" & ThisWorkbook.Name & ".ini"
     
-    'For ListBoxes
+    'For ListBoxes (index also for ComboBox)
     Dim counterIndex As Long 'Generic counter to loop index
     Dim counterCol As Long  'Generic counter to loop through columns
     Dim numCol As Long  'Column number for listbox
@@ -101,8 +101,22 @@ Function FormINI(ByRef formUsing As UserForm, _
                         If strINIValue <> c_KEY_DOES_NOT_EXIST Then ctrl.Value = strINIValue
                     
                 Case "ComboBox"
-                    strINIValue = ManageINI(actionINI, ctrl.Name, "Value", strINIpath)
-                        If strINIValue <> c_KEY_DOES_NOT_EXIST Then ctrl.Value = strINIValue
+                     strINIValue = ManageINI(actionINI, ctrl.Name, "Value", strINIpath)
+                    'Going to make sure it exists first, if the ComboBox has that property set
+                    If ctrl.MatchRequired = True Then
+                        For counterIndex = 0 To ctrl.ListCount
+                            If ctrl.List(counterIndex) = strINIValue Then
+                                'Exists; set it
+                                strINIValue = ManageINI(actionINI, ctrl.Name, "Value", strINIpath)
+                                    If strINIValue <> c_KEY_DOES_NOT_EXIST Then ctrl.Value = strINIValue
+                                Exit For
+                            End If
+                        Next counterIndex
+                    Else
+                        'Doesn't matter, so set it
+                        strINIValue = ManageINI(actionINI, ctrl.Name, "Value", strINIpath)
+                            If strINIValue <> c_KEY_DOES_NOT_EXIST Then ctrl.Value = strINIValue
+                    End If
                 
                 Case "CommandButton"
                 
