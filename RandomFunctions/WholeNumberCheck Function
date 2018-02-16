@@ -1,0 +1,18 @@
+Function wholeNumberCheck(ByVal lngLowerVal As Long, _
+                          ByVal lngUpperVal As Long, _
+                          ByVal strValToCheck As String, _
+                          ByVal strWhatItIs As String) As Boolean
+'Validates if an integer (in the form of a string) is in a range of integers
+'Returns true if it is, or false if not
+    If IsNumeric(strValToCheck) = True Then
+        If CLng(strValToCheck) < lngLowerVal Or CLng(strValToCheck) > lngUpperVal Then
+            Call MsgBox(strWhatItIs & " needs to be a whole number between " & lngLowerVal & " and " & lngUpperVal & ".", vbInformation)
+            wholeNumberCheck = False
+        Else
+            wholeNumberCheck = True
+        End If
+    Else
+        Call MsgBox(strWhatItIs & " needs to be a whole number between " & lngLowerVal & " and " & lngUpperVal & ".", vbInformation)
+        wholeNumberCheck = False
+    End If
+End Function
