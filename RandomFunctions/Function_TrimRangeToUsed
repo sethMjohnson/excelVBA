@@ -1,0 +1,7 @@
+Function trimOurRange(ByRef ourRange As Range)
+    'Will trim a selected range to just the used, if the range is terribly large
+    If ourRange.Rows.Count = ActiveSheet.Rows.Count Or _
+        ourRange.Columns.Count = ActiveSheet.Columns.Count Then
+        Intersect(ourRange, ActiveWorkbook.Sheets(ourRange.Parent.Name).UsedRange).Select
+    End If
+End Function
