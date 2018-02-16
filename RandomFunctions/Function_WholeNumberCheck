@@ -1,3 +1,5 @@
+Option Explicit
+
 Function wholeNumberCheck(ByVal lngLowerVal As Long, _
                           ByVal lngUpperVal As Long, _
                           ByVal strValToCheck As String, _
